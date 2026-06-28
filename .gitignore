@@ -1,0 +1,13 @@
+.cursor/
+data/
+*.duckdb
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+dbt_deskbird/target/
+dbt_deskbird/dbt_packages/
+dbt_deskbird/logs/
+.streamlit/secrets.toml
+docs/slides/
+.DS_Store

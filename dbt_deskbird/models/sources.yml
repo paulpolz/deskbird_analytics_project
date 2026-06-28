@@ -1,0 +1,11 @@
+version: 2
+
+sources:
+  - name: raw
+    schema: raw
+    tables:
+      - name: ads_campaign_daily
+      - name: crm_leads
+      - name: crm_opportunity_funnel
+      - name: crm_wins
+      - name: product_events

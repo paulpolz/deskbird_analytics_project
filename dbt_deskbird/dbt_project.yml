@@ -1,0 +1,23 @@
+name: deskbird
+version: 1.0.0
+profile: deskbird
+model-paths: ["models"]
+test-paths: ["tests"]
+macro-paths: ["macros"]
+target-path: target
+clean-targets: ["target", "dbt_packages"]
+
+vars:
+  seat_segment_threshold: 200
+  demo_sla_days: 14
+
+models:
+  deskbird:
+    staging:
+      +schema: staging
+    intermediate:
+      +schema: intermediate
+    marts:
+      +schema: marts
+    metrics:
+      +schema: metrics

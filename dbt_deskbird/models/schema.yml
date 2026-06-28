@@ -1,0 +1,116 @@
+version: 2
+
+models:
+  - name: stg_ads
+    columns:
+      - name: campaign_id
+        tests: [not_null]
+      - name: date
+        tests: [not_null]
+
+  - name: stg_crm_leads
+    columns:
+      - name: lead_id
+        tests: [unique, not_null]
+
+  - name: stg_crm_funnel
+    columns:
+      - name: funnel_event_id
+        tests: [unique, not_null]
+      - name: lead_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_crm_leads')
+              field: lead_id
+
+  - name: stg_crm_wins
+    columns:
+      - name: client_id
+        tests: [unique, not_null]
+      - name: lead_id
+        tests:
+          - unique
+          - relationships:
+              to: ref('stg_crm_leads')
+              field: lead_id
+
+  - name: dim_clients
+    columns:
+      - name: client_id
+        tests: [unique, not_null]
+
+  - name: fct_lead_journey
+    columns:
+      - name: lead_id
+        tests: [unique, not_null]
+      - name: client_id
+        tests:
+          - relationships:
+              to: ref('dim_clients')
+              field: client_id
+              where: "client_id is not null"
+
+  - name: metric_cac
+    description: "CAC = ad spend / won clients, grain campaign × month"
+    columns:
+      - name: cac
+        description: "Total spend divided by won clients attributed via lead UTMs"
+
+  - name: metric_funnel_rates
+    description: "Full acquisition-to-close funnel rates, grain month × channel × country × segment"
+    columns:
+      - name: lead_to_funnel_rate
+        description: "CRM leads / ad clicks"
+      - name: call_rate
+        description: "Calls / CRM leads"
+      - name: demo_rate
+        description: "Demos / calls"
+      - name: proposal_rate
+        description: "Proposals / demos"
+      - name: win_rate
+        description: "Wins / proposals"
+      - name: loss_rate
+        description: "Losses after proposal / proposals"
+
+  - name: metric_win_rate
+    description: "Wins and losses per proposal, grain month × channel × country × segment"
+    columns:
+      - name: win_rate
+        description: "Wins / proposals"
+      - name: loss_rate
+        description: "Losses after proposal / proposals"
+
+  - name: metric_funnel_stage_latency
+    description: "Avg days from lead creation to funnel stages, by terminal outcome"
+    columns:
+      - name: outcome
+        description: "win, loss, or open (non-terminal pipeline)"
+      - name: lead_to_call_days
+        description: "Days from lead.created_at to call stage (when reached)"
+      - name: lead_to_demo_days
+        description: "Days from lead.created_at to demo stage (when reached)"
+      - name: lead_to_proposal_days
+        description: "Days from lead.created_at to proposal stage (when reached)"
+
+  - name: metric_seat_utilization
+    description: "seats_active / contracted seats, grain client × day"
+    columns:
+      - name: avg_seat_utilization
+        description: "Daily avg utilization ratio"
+      - name: contract_length_bucket
+        description: "12-18 mo, 19-24 mo, or 25-36 mo"
+      - name: seats_bucket
+        description: "<100, 100-199, 200-399, or 400+ contracted seats"
+
+  - name: metric_feature_adoption_rate
+    description: "Users with feature_adopted / users with login, grain month × segment × buckets × feature"
+    columns:
+      - name: feature_adoption_rate
+        description: "Distinct adopting users divided by distinct login users"
+      - name: feature_name
+        description: "Adopted product feature"
+      - name: contract_length_bucket
+        description: "12-18 mo, 19-24 mo, or 25-36 mo"
+      - name: seats_bucket
+        description: "<100, 100-199, 200-399, or 400+ contracted seats"
