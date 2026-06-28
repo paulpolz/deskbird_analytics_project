@@ -11,3 +11,6 @@ dbt_deskbird/logs/
 .streamlit/secrets.toml
 docs/slides/
 .DS_Store
+*.pptx
+*.key
+*.pdf
