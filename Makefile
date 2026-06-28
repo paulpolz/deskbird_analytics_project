@@ -13,12 +13,12 @@ app:
 	python3.11 run.py app
 
 slides:
-	python3.11 scripts/export_slide_assets.py
+	python3.11 run.py slides
 
-deck: slides
-	python3.11 scripts/build_deck.py
+deck:
+	python3.11 run.py deck
 
 all:
 	python3.11 run.py all
-	make deck
-	make app
+	python3.11 run.py deck
+	python3.11 run.py app

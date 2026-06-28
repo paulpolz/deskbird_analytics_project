@@ -59,6 +59,15 @@ def app() -> None:
   _run([_py(), "-m", "streamlit", "run", "app/app.py"])
 
 
+def slides() -> None:
+  _run([_py(), "scripts/export_slide_assets.py"])
+
+
+def deck() -> None:
+  slides()
+  _run([_py(), "scripts/build_deck.py"])
+
+
 def all_steps() -> None:
   if not VENV.exists():
     setup()
@@ -69,9 +78,20 @@ def all_steps() -> None:
 
 def main() -> None:
   parser = argparse.ArgumentParser(description="Deskbird Growth Pipeline runner")
-  parser.add_argument("command", choices=["setup", "generate", "dbt", "app", "all"])
+  parser.add_argument(
+    "command",
+    choices=["setup", "generate", "dbt", "app", "slides", "deck", "all"],
+  )
   args = parser.parse_args()
-  {"setup": setup, "generate": generate, "dbt": dbt, "app": app, "all": all_steps}[args.command]()
+  {
+    "setup": setup,
+    "generate": generate,
+    "dbt": dbt,
+    "app": app,
+    "slides": slides,
+    "deck": deck,
+    "all": all_steps,
+  }[args.command]()
 
 
 if __name__ == "__main__":
