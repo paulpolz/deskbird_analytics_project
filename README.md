@@ -15,7 +15,7 @@ python3.11 run.py all      # setup venv, generate data, run dbt
 python3.11 run.py app      # launch Streamlit dashboard
 ```
 
-Or via Makefile: `make all` then `make app`.
+Or via Makefile: `make all`.
 
 ## Manual runbook
 
